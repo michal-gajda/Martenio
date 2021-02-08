@@ -16,7 +16,10 @@ Install
 ```
 dotnet tool install --global Microsoft.dotnet-httprepl
 ```
-
+Use
+```
+httprepl https://localhost:5001/swagger
+```
 #### 3. HTTPS in Docker ####
 ```
 dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p P@ssw0rd
