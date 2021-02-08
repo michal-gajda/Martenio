@@ -20,6 +20,8 @@ namespace Martenio.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHealthChecks();
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddInfrastructure(this.Configuration);
             services.AddApplication();
@@ -27,7 +29,12 @@ namespace Martenio.WebApi
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Martenio.WebApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Martenio.WebApi",
+                    Version = "v1",
+                });
+                //c.EnableXmlDocComments();
             });
         }
 
@@ -36,18 +43,20 @@ namespace Martenio.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
+                app.UseSwagger(c =>
+                {
+                    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+                    c.SerializeAsV2 = true;
+                });
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "Martenio.WebApi v1"));
             }
 
+            app.UseHealthChecks("/health");
+            app.UseHttpsRedirection();
+
             app.UseRouting();
-
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

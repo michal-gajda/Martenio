@@ -1,0 +1,57 @@
+version: "3.9"
+networks:
+  localdev:
+services:
+  martenio-api:
+    container_name: martenio-api
+    image: gajdaltd/martenio-api:0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - pgadmin4
+    environment:
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
+      - DOTNET_NOLOGO=1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=P@ssw0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - CONNECTIONSTRINGS__MARTEN="host=localhost;database=marten;username=user;password=P@ssw0rd;"
+    ports:
+      - "5000:5080"
+      - "5001:5443"
+    networks:
+      - localdev
+    volumes:
+      - ./aspnetapp.pfx:/https/aspnetapp.pfx:ro
+  postgresql:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: "${DEFAULT_PASSWORD:-P@ssw0rd}"
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  pgadmin4:
+    image: dpage/pgadmin4:latest
+    restart: always
+    depends_on:
+      - postgresql
+    environment:
+      PGADMIN_DEFAULT_EMAIL: michal@gajda.co.uk
+      PGADMIN_DEFAULT_PASSWORD: "${DEFAULT_PASSWORD:-P@ssw0rd}"
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./storage:/var/lib/pgadmin/storage
+    links:
+      - "postgresql:pgsql-server"
+volumes:
+  db-data:
+  pgadmin-data:
