@@ -7,6 +7,7 @@ namespace Martenio.WebApi.Controllers
     using Martenio.Application.Users.Commands;
     using Martenio.Application.Users.Queries;
     using Martenio.Core.Users;
+    using Martenio.WebApi.Models;
 
     [ApiController]
     [Route("[controller]")]
@@ -18,9 +19,9 @@ namespace Martenio.WebApi.Controllers
             this.mediator = mediator;
 
         [HttpPost]
-        public async Task<IActionResult> Post(CreateUser user)
+        public async Task<IActionResult> Post(User user)
         {
-            _ = await this.mediator.Send(user);
+            _ = await this.mediator.Send(new CreateUser { FirstName = user.FirstName, LastName = user.LastName, MiddleName = user.MiddleName, });
             return await Task.FromResult(this.Ok());
         }
 
@@ -29,10 +30,9 @@ namespace Martenio.WebApi.Controllers
             await this.mediator.Send(new ReadUser { Id = id, });
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Put(Guid id, UpdateUser user)
+        public async Task<IActionResult> Put(Guid id, User user)
         {
-            user.Id = id;
-            _ = await this.mediator.Send(user);
+            _ = await this.mediator.Send(new UpdateUser { FirstName = user.FirstName, Id = id, LastName = user.LastName, MiddleName = user.MiddleName, });
             return await Task.FromResult(this.Ok());
         }
 

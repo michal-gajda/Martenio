@@ -12,8 +12,8 @@ RUN dotnet restore
 
 COPY . .
 
-RUN dotnet build -c Release -o /app/build
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet build --configuration Release --output /app/build
+RUN dotnet publish --configuration Release --output /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
