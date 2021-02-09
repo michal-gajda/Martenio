@@ -29,5 +29,5 @@ ENV ASPNETCORE_URLS http://+:5080;https://+:5443
 EXPOSE 5080
 EXPOSE 5443
 
-HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl --fail https://localhost:5443/health || exit 1
+HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl --fail http://localhost:5080/health || exit 1
 ENTRYPOINT ["dotnet", "Martenio.WebApi.dll"]

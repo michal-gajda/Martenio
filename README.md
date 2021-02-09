@@ -20,6 +20,11 @@ Use
 ```
 httprepl https://localhost:5001/swagger
 ```
+Configure
+```
+pref set editor.command.default "C:\Program Files\Microsoft VS Code\Code.exe"
+pref set editor.command.default.arguments "--wait"
+```
 #### 3. HTTPS in Docker ####
 ```
 dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p P@ssw0rd

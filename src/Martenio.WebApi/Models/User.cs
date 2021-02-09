@@ -5,12 +5,12 @@ namespace Martenio.WebApi.Models
 
     public sealed record User
     {
-        // [Required]
+        [Required]
         [JsonPropertyName("firstName")]
         public string FirstName { get; init; } = string.Empty;
         [JsonPropertyName("middleName")]
         public string? MiddleName { get; init; } = null;
-        // [Required]
+        [Required]
         [JsonPropertyName("lastName")]
         public string LastName { get; init; } = string.Empty;
     }
